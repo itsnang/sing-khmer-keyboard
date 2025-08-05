@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Exclude sensitive data from cloud backup -->
+        <exclude domain="sharedpref" path="user_dictionary.xml" />
+        <exclude domain="database" path="learned_words.db" />
+    </cloud-backup>
+    <device-transfer>
+        <!-- Include user preferences in device transfer -->
+        <include domain="sharedpref" path="keyboard_settings.xml" />
+    </device-transfer>
+</data-extraction-rules>
