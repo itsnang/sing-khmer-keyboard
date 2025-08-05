@@ -36,24 +36,53 @@
         <item name="android:background">@color/keyboard_background</item>
     </style>
     
-    <!-- Key Styles -->
+    <!-- Modern Premium Key Styles -->
     <style name="KeyStyle">
         <item name="android:layout_margin">2dp</item>
         <item name="android:background">@drawable/key_background</item>
         <item name="android:textColor">@color/key_text_color</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:letterSpacing">0.02</item>
     </style>
     
-    <!-- Suggestion Strip Style -->
+    <style name="SpecialKeyStyle">
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/special_key_background</item>
+        <item name="android:textColor">@color/special_key_text</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <style name="ActionKeyStyle">
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:background">@drawable/action_key_background</item>
+        <item name="android:textColor">@color/action_key_text</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+    
+    <!-- Modern Suggestion Strip Style -->
     <style name="SuggestionStripStyle">
         <item name="android:background">@color/suggestion_background</item>
-        <item name="android:elevation">4dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
     </style>
 </resources>

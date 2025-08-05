@@ -29,23 +29,29 @@
     <color name="md_theme_light_inverseSurface">#313033</color>
     <color name="md_theme_light_inversePrimary">#D0BCFF</color>
     
-    <!-- Keyboard Specific Colors -->
-    <color name="keyboard_background">#F5F5F5</color>
+    <!-- Modern Premium Keyboard Colors -->
+    <color name="keyboard_background">#F8F9FA</color>
     <color name="key_background">#FFFFFF</color>
-    <color name="key_background_pressed">#E0E0E0</color>
-    <color name="key_text_color">#212121</color>
-    <color name="key_text_color_secondary">#757575</color>
+    <color name="key_background_pressed">#E8EAED</color>
+    <color name="key_text_color">#1F2937</color>
+    <color name="key_text_color_secondary">#6B7280</color>
     
-    <!-- Suggestion Strip Colors -->
+    <!-- Suggestion Strip Colors (Premium Style) -->
     <color name="suggestion_background">#FFFFFF</color>
-    <color name="suggestion_text_color">#212121</color>
-    <color name="suggestion_text_color_secondary">#757575</color>
-    <color name="suggestion_divider">#E0E0E0</color>
-    <color name="suggestion_highlight">#E3F2FD</color>
+    <color name="suggestion_text_color">#1F2937</color>
+    <color name="suggestion_text_color_secondary">#6B7280</color>
+    <color name="suggestion_divider">#E5E7EB</color>
+    <color name="suggestion_highlight">#EFF6FF</color>
     
-    <!-- Special Key Colors -->
-    <color name="special_key_background">#E0E0E0</color>
-    <color name="special_key_text">#424242</color>
+    <!-- Special Key Colors (Premium Style) -->
+    <color name="special_key_background">#F3F4F6</color>
+    <color name="special_key_background_pressed">#D1D5DB</color>
+    <color name="special_key_text">#374151</color>
+    
+    <!-- Action Key Colors (Modern Blue) -->
+    <color name="action_key_background">#3B82F6</color>
+    <color name="action_key_background_pressed">#2563EB</color>
+    <color name="action_key_text">#FFFFFF</color>
     
     <!-- Common Colors -->
     <color name="black">#FF000000</color>

@@ -3,18 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/keyboard_background">
+    android:background="@color/keyboard_background"
+    android:padding="4dp">
 
     <!-- Suggestion Strip -->
     <LinearLayout
         android:id="@+id/suggestion_strip"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="52dp"
         android:orientation="horizontal"
         android:background="@color/suggestion_background"
-        android:elevation="4dp"
-        android:paddingHorizontal="8dp"
-        android:gravity="center_vertical">
+        android:elevation="0dp"
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="2dp">
 
         <TextView
             android:id="@+id/suggestion_1"
@@ -23,7 +25,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/suggestion_text_color"
-            android:textSize="16sp"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.01"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true" />
@@ -41,7 +45,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/suggestion_text_color"
-            android:textSize="16sp"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.01"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true" />
@@ -59,7 +65,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/suggestion_text_color"
-            android:textSize="16sp"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="0.01"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true" />
@@ -78,12 +86,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="2dp">
 
             <!-- Row 1: Numbers -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -171,7 +179,7 @@
             <!-- Row 2: QWERTY -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -249,7 +257,7 @@
             <!-- Row 3: ASDF -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -320,7 +328,7 @@
             <!-- Row 4: ZXCV with Shift and Backspace -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -384,60 +392,60 @@
 
                 <TextView
                     android:id="@+id/key_backspace"
-                    style="@style/KeyStyle"
+                    style="@style/SpecialKeyStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.5"
-                    android:background="@drawable/special_key_background"
-                    android:text="⌫"
-                    android:textColor="@color/special_key_text" />
+                    android:text="⌫" />
 
             </LinearLayout>
 
             <!-- Row 5: Space bar and Enter -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/key_symbols"
-                    style="@style/KeyStyle"
+                    style="@style/SpecialKeyStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.5"
-                    android:background="@drawable/special_key_background"
                     android:text="\?123"
-                    android:textColor="@color/special_key_text"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/key_language"
-                    style="@style/KeyStyle"
+                    style="@style/SpecialKeyStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/special_key_background"
-                    android:text="🌐"
-                    android:textColor="@color/special_key_text" />
+                    android:text="🌐" />
+
+                <TextView
+                    android:id="@+id/key_emoji"
+                    style="@style/SpecialKeyStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="😀" />
 
                 <TextView
                     android:id="@+id/key_space"
                     style="@style/KeyStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
+                    android:layout_weight="3"
                     android:text="@string/space_key_label" />
 
                 <TextView
                     android:id="@+id/key_enter"
-                    style="@style/KeyStyle"
+                    style="@style/ActionKeyStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.5"
-                    android:background="@drawable/special_key_background"
-                    android:text="↵"
-                    android:textColor="@color/special_key_text" />
+                    android:text="↵" />
 
             </LinearLayout>
 

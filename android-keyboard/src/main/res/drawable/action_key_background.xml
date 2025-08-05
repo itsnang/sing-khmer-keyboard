@@ -4,7 +4,7 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/special_key_background_pressed" />
+                    <solid android:color="@color/action_key_background_pressed" />
                     <corners android:radius="8dp" />
                 </shape>
             </item>
@@ -12,15 +12,15 @@
     </item>
     <item>
         <layer-list>
-            <item android:top="1dp" android:left="1dp" android:right="1dp" android:bottom="2dp">
+            <item android:top="1dp" android:left="1dp" android:right="1dp" android:bottom="3dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="#08000000" />
+                    <solid android:color="#20000000" />
                     <corners android:radius="8dp" />
                 </shape>
             </item>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/special_key_background" />
+                    <solid android:color="@color/action_key_background" />
                     <corners android:radius="8dp" />
                 </shape>
             </item>
