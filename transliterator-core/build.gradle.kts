@@ -7,15 +7,15 @@ repositories {
     mavenCentral()
 }
 
-// Configure JVM target compatibility
+// Configure JVM target compatibility (Android compatible)
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
 
 application {
@@ -29,4 +29,3 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-
