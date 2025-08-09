@@ -17,12 +17,32 @@
 package dev.patrickgold.florisboard.ime.nlp
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.singkhmer.transliterator.Transliterator
 import dev.patrickgold.florisboard.ime.core.Subtype
 import dev.patrickgold.florisboard.ime.editor.EditorContent
 
 import dev.patrickgold.florisboard.lib.devtools.flogDebug
 import java.util.concurrent.ConcurrentHashMap
+
+/**
+ * Custom suggestion candidate for Khmer transliteration.
+ * This candidate is designed to work with continuous Khmer text input
+ * without automatic space insertion and smart text replacement.
+ */
+data class KhmerSuggestionCandidate(
+    override val text: CharSequence,
+    override val secondaryText: CharSequence? = null,
+    override val confidence: Double = 0.0,
+    override val isEligibleForAutoCommit: Boolean = false,
+    override val isEligibleForUserRemoval: Boolean = false,
+    override val sourceProvider: SuggestionProvider? = null,
+    val originalLatinText: String = "", // Store the original Latin text this suggestion replaces
+    val textBeforeCursor: String = "", // Store text before the Latin word
+) : SuggestionCandidate {
+    override val icon: ImageVector? = null
+}
 
 /**
  * Khmer suggestion provider that uses the SingKhmer transliteration engine
@@ -57,10 +77,51 @@ class KhmerSuggestionProvider(private val context: Context) : SuggestionProvider
         // TODO: Later, change this back to only accept Khmer subtypes
         flogDebug { "Testing mode: Accepting subtype ${subtype.primaryLocale.languageTag()} for Khmer transliteration" }
 
-        // Get the current word being typed
-        val currentWord = content.composingText.toString().trim()
+        // Get the current word being typed - handle Khmer continuous text
+        var currentWord = content.composingText.toString().trim()
+
+        // Extract only the Latin characters from the composing text or full text
+        val fullText = content.text.toString()
+        val selection = content.selection
+
+        flogDebug { "Raw content: composing='$currentWord', fullText='$fullText', selection=${selection.start}-${selection.end}" }
+
+        // Always extract the last Latin word being typed, regardless of composing text state
+        if (selection.isValid && selection.start == selection.end) {
+            val cursorPos = selection.start
+            // Add bounds checking to prevent StringIndexOutOfBoundsException
+            val safeTextBeforeCursor = if (cursorPos > 0 && cursorPos <= fullText.length) {
+                fullText.substring(0, cursorPos)
+            } else if (cursorPos > fullText.length) {
+                fullText // Use full text if cursor is beyond text length
+            } else {
+                ""
+            }
+
+            // Extract the last sequence of Latin characters before the cursor
+            val latinWordRegex = Regex("[a-zA-Z]+$")
+            val match = latinWordRegex.find(safeTextBeforeCursor)
+
+            if (match != null) {
+                currentWord = match.value
+                flogDebug { "Extracted Latin word from position $cursorPos: '$currentWord'" }
+            }
+        }
+
+        // If we still have mixed content (Khmer + Latin), extract just the Latin part
+        if (currentWord.isNotBlank()) {
+            val latinOnlyRegex = Regex("[a-zA-Z]+")
+            val latinMatches = latinOnlyRegex.findAll(currentWord)
+            val lastLatinWord = latinMatches.lastOrNull()?.value
+
+            if (lastLatinWord != null && lastLatinWord != currentWord) {
+                currentWord = lastLatinWord
+                flogDebug { "Extracted final Latin word: '$currentWord'" }
+            }
+        }
 
         if (currentWord.isBlank()) {
+            flogDebug { "No word to transliterate, returning empty suggestions" }
             return emptyList()
         }
 
@@ -75,6 +136,36 @@ class KhmerSuggestionProvider(private val context: Context) : SuggestionProvider
 
         flogDebug { "Transliterator returned ${khmerSuggestions.size} suggestions for '$currentWord': $khmerSuggestions" }
 
+        // Calculate text before the current Latin word for smart replacement
+        val textBeforeLatinWord = if (selection.isValid && selection.start == selection.end) {
+            val cursorPos = selection.start
+            // Add bounds checking to prevent StringIndexOutOfBoundsException
+            val safeTextBeforeCursor = if (cursorPos > 0 && cursorPos <= fullText.length) {
+                fullText.substring(0, cursorPos)
+            } else if (cursorPos > fullText.length) {
+                fullText // Use full text if cursor is beyond text length
+            } else {
+                ""
+            }
+
+            // Find where the current Latin word starts
+            val latinWordRegex = Regex("[a-zA-Z]+$")
+            val match = latinWordRegex.find(safeTextBeforeCursor)
+
+            if (match != null) {
+                val startPos = match.range.first
+                if (startPos >= 0 && startPos <= safeTextBeforeCursor.length) {
+                    safeTextBeforeCursor.substring(0, startPos)
+                } else {
+                    safeTextBeforeCursor
+                }
+            } else {
+                safeTextBeforeCursor
+            }
+        } else {
+            fullText
+        }
+
         // Convert to SuggestionCandidate objects
         val candidates = khmerSuggestions.mapIndexed { index, khmerText ->
             // Higher confidence for earlier suggestions (exact matches come first)
@@ -85,13 +176,15 @@ class KhmerSuggestionProvider(private val context: Context) : SuggestionProvider
                 else -> 0.3 // Fallback
             }
 
-            WordSuggestionCandidate(
+            KhmerSuggestionCandidate(
                 text = khmerText,
                 secondaryText = currentWord, // Show romanization as secondary text
                 confidence = confidence,
                 isEligibleForAutoCommit = index == 0 && confidence > 0.8, // Auto-commit only highest confidence
                 isEligibleForUserRemoval = false, // Don't allow removal of transliteration suggestions
-                sourceProvider = this
+                sourceProvider = this,
+                originalLatinText = currentWord, // Store the Latin text this replaces
+                textBeforeCursor = textBeforeLatinWord // Store text before the Latin word
             )
         }
 

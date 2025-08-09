@@ -37,6 +37,8 @@ import dev.patrickgold.florisboard.ime.text.composing.Appender
 import dev.patrickgold.florisboard.ime.text.composing.Composer
 import dev.patrickgold.florisboard.ime.text.key.KeyVariation
 import dev.patrickgold.florisboard.keyboardManager
+import dev.patrickgold.florisboard.lib.devtools.flogDebug
+import dev.patrickgold.florisboard.lib.devtools.flogError
 import dev.patrickgold.florisboard.lib.ext.ExtensionComponentName
 import dev.patrickgold.florisboard.nlpManager
 import dev.patrickgold.florisboard.subtypeManager
@@ -252,6 +254,12 @@ class EditorInstance(context: Context) : AbstractEditorInstance(context) {
         val text = candidate.text.toString()
         if (text.isEmpty() || activeInfo.isRawInputEditor) return false
         val content = activeContent
+
+        // Handle Khmer suggestions with smart replacement
+        if (candidate.javaClass.simpleName.contains("Khmer")) {
+            return commitKhmerCompletion(candidate)
+        }
+
         return if (content.composing.isValid) {
             phantomSpace.setActive(showComposingRegion = false, candidate = candidate)
             super.finalizeComposingText(text)
@@ -264,6 +272,55 @@ class EditorInstance(context: Context) : AbstractEditorInstance(context) {
                 super.commitText(text)
             }.also {
                 // handled in finalizeComposingText if content.composing.isValid
+                updateLastCommitPosition()
+            }
+        }
+    }
+
+    /**
+     * Smart commit for Khmer suggestions that only replaces the Latin word
+     * while preserving all previously typed Khmer text.
+     */
+    private fun commitKhmerCompletion(candidate: SuggestionCandidate): Boolean {
+        try {
+            // Use reflection to get KhmerSuggestionCandidate specific fields
+            val clazz = candidate.javaClass
+            val originalLatinTextField = clazz.getDeclaredField("originalLatinText")
+            val textBeforeCursorField = clazz.getDeclaredField("textBeforeCursor")
+
+            originalLatinTextField.isAccessible = true
+            textBeforeCursorField.isAccessible = true
+
+            val originalLatinText = originalLatinTextField.get(candidate) as String
+            val textBeforeCursor = textBeforeCursorField.get(candidate) as String
+            val khmerText = candidate.text.toString()
+
+            // Construct the new text: textBeforeCursor + khmerText
+            val newCompleteText = textBeforeCursor + khmerText
+
+            flogDebug { "KhmerSuggestionProvider: Smart replacement - replacing '$originalLatinText' with '$khmerText' in context '$textBeforeCursor'" }
+
+            // Clear any existing composing text and replace with our smart text
+            val ic = currentInputConnection() ?: return false
+            ic.finishComposingText()
+
+            // Select all current text and replace it
+            val currentText = activeContent.text.toString()
+            if (currentText.isNotEmpty()) {
+                ic.setSelection(0, currentText.length)
+                ic.commitText(newCompleteText, 1)
+            } else {
+                ic.commitText(newCompleteText, 1)
+            }
+
+            updateLastCommitPosition()
+            return true
+
+        } catch (e: Exception) {
+            flogError { "KhmerSuggestionProvider: Error in smart replacement: ${e.message}" }
+            // Fallback to normal commit
+            phantomSpace.setActive(showComposingRegion = false, candidate = candidate)
+            return super.commitText(candidate.text.toString()).also {
                 updateLastCommitPosition()
             }
         }
